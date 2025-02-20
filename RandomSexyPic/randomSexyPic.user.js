@@ -3,10 +3,10 @@
 // @name:zh-TW   軟瑟盤
 // @name:ja      RandomSexyPicParser
 // @namespace    hoothin
-// @version      1.3.18
+// @version      1.3.19
 // @description        Random Sexy Pictures Parser
 // @description:zh-TW  隨機色圖
-// @description:ja     Random Sexy Pictures Parser
+// @description:ja     ランダムセクシー画像パーサー
 // @author       hoothin
 // @match        https://api.lolicon.app/setu/v2*
 // @match        https://api.nyan.xyz/httpapi/sexphoto*
@@ -79,7 +79,7 @@ if (window.top != window.self) {
             }
         },
         "api.nyan.xyz":{
-            hide: false,
+            hide: true,
             include: /httpapi\/sexphoto/i,
             name:"Nyan ACG SexyPic",
             url:"https://api.nyan.xyz/httpapi/sexphoto/?r18=true&num=10",
@@ -122,11 +122,11 @@ if (window.top != window.self) {
             }
         },
         "buyersShow":{
-            include: /api\/(rand|tao|mjx1)/i,
+            include: /api\/(rand|tao|mjx1|taobaoBuyerShow)/i,
             name:"Taobao Buyers Show",
             urls:["https://api.uomg.com/api/rand.img3?format=json&num=15",
-                 "https://api.vvhan.com/api/tao?type=json&num=15",
-                 "https://www.hlapi.cn/api/mjx1?type=json&num=15"],
+                 "https://api.suxun.site/api/tao?type=json&num=15",
+                 "https://api.03c3.cn/api/taobaoBuyerShow?type=json&num=15"],
             run:()=>{
                 r18Check.style.display=sfwCheck.style.display=r18CheckLabel.style.display=sfwCheckLabel.style.display="none";
                 var searchNum=getSearchParam("num");
@@ -177,16 +177,16 @@ if (window.top != window.self) {
         "3650000.xyz":{
             include: /\/api\/\?type=json/i,
             name:"3650000",
-            url:"https://3650000.xyz/api/?type=json&mode=7&num=15",
-            luckyUrl:["https://3650000.xyz/api/?type=json&num=15",
-                     "https://3650000.xyz/api/?type=json&mode=1&num=15",
-                     "https://3650000.xyz/api/?type=json&mode=2&num=15",
-                     "https://3650000.xyz/api/?type=json&mode=3&num=15",
-                     "https://3650000.xyz/api/?type=json&mode=66&num=15",
-                     "https://3650000.xyz/api/?type=json&mode=5&num=15",
-                     "https://3650000.xyz/api/?type=json&mode=7&num=15",
-                     "https://3650000.xyz/api/?type=json&mode=8&num=15",
-                     "https://3650000.xyz/api/?type=json&mode=9&num=15"],
+            url:"https://3650000.xyz/api/?type=json&mode=7&num=6",
+            luckyUrl:["https://3650000.xyz/api/?type=json&num=6",
+                     "https://3650000.xyz/api/?type=json&mode=1&num=6",
+                     "https://3650000.xyz/api/?type=json&mode=2&num=6",
+                     "https://3650000.xyz/api/?type=json&mode=3&num=6",
+                     "https://3650000.xyz/api/?type=json&mode=5&num=6",
+                     "https://3650000.xyz/api/?type=json&mode=6&num=6",
+                     "https://3650000.xyz/api/?type=json&mode=7&num=6",
+                     "https://3650000.xyz/api/?type=json&mode=8&num=6",
+                     "https://3650000.xyz/api/?type=json&mode=9&num=6"],
             run:()=>{
                 r18Check.style.display=sfwCheck.style.display=r18CheckLabel.style.display=sfwCheckLabel.style.display="none";
                 var searchNum=getSearchParam("num");
@@ -216,8 +216,8 @@ if (window.top != window.self) {
                     ["Weibo","1"],
                     ["Instagram","2"],
                     ["Cosplay","3"],
-                    ["Nsfw","66"],
                     ["Mtcos","5"],
+                    ["Mtcos2","6"],
                     ["Legs","7"],
                     ["MoreCoser","8"],
                     ["Tuwan","9"]
@@ -238,7 +238,9 @@ if (window.top != window.self) {
         "api.uomg.com":"buyersShow",
         "api.vvhan.com":"buyersShow",
         "www.hlapi.cn":"buyersShow",
-        "api.ghser.com":"buyersShow"
+        "api.ghser.com":"buyersShow",
+        "api.03c3.cn":"buyersShow",
+        "api.suxun.site":"buyersShow"
     };
     var customRule=GM_getValue("RSPrules") || {};
     var customRuleArr=[];
@@ -272,6 +274,9 @@ if (window.top != window.self) {
 
     function createHTML(html) {
         return escapeHTMLPolicy ? escapeHTMLPolicy.createHTML(html) : html;
+    }
+    if (location.href.indexOf("randomsexypicparser") != -1) {
+        GM_addStyle(".discussion-rating{display:none}");
     }
     var curConfig=setuConfig[document.domain],jsonData,hasFloatImg=false,grabed=false,oClient;
     if(curConfig){
@@ -379,7 +384,7 @@ if (window.top != window.self) {
             var curNode = document.body.childNodes[i];
             if (curNode.nodeType == 1 || curNode.nodeName == "PRE") {
                 firstText = curNode.nodeValue || curNode.innerText;
-                break;
+                if (firstText) break;
             }
         }
         if(firstText)jsonData=JSON.parse(firstText);
